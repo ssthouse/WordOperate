@@ -1,4 +1,4 @@
-package com.company;
+package com.ssthouse;
 
 /**
  * Created by ssthouse on 2015/8/29.

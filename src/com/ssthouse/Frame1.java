@@ -1,4 +1,4 @@
-package com.company;
+package com.ssthouse;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
