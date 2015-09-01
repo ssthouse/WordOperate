@@ -1,5 +1,6 @@
-package com.ssthouse;
+package com.ssthouse.word;
 
+import com.ssthouse.util.Log;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.io.*;

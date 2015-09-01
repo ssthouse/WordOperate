@@ -1,4 +1,4 @@
-package com.ssthouse;
+package com.ssthouse.word;
 
 /**
  * Created by ssthouse on 2015/8/29.

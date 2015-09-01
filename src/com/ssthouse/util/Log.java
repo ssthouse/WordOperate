@@ -1,11 +1,6 @@
-package com.ssthouse;
+package com.ssthouse.util;
 
 public class Log {
-
-    public static void logError(String msg) {
-        System.out.println("Error:    " + msg);
-    }
-
     public static void logInfo(String msg) {
         System.out.println("Info:    " + msg);
     }
@@ -15,6 +10,10 @@ public class Log {
     }
 
     public static void log(String tag, String msg) {
-        System.out.println(tag + ":    " + msg);
+        System.err.println(tag + ":    " + msg);
+    }
+
+    public static void log(String msg) {
+        System.err.println("    " + msg);
     }
 }

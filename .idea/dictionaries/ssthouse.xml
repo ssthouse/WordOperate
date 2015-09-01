@@ -2,6 +2,8 @@
   <dictionary name="ssthouse">
     <words>
       <w>docx</w>
+      <w>jdbc</w>
+      <w>sqlite</w>
       <w>ssthouse</w>
       <w>xwpf</w>
     </words>
