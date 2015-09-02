@@ -1,15 +1,14 @@
 package com.ssthouse.view;
 
 import com.ssthouse.model.DbHelper;
-import com.ssthouse.util.FileHelper;
 import com.ssthouse.util.Log;
 import com.ssthouse.word.WordHelper;
 import com.ssthouse.word.WordKey;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +22,9 @@ public class Frame1 extends JFrame {
     //数据库帮助类
     private DbHelper dbHelper;
 
+    /**
+     * 父容器
+     */
     public JPanel panel1;
     private JPanel Input;
     private JTextField tfTitle;
@@ -32,13 +34,19 @@ public class Frame1 extends JFrame {
     private JButton btnSubmit;
     private JButton btnOpenDb;
 
-    public Frame1() {
+    public Frame1(String title) throws HeadlessException {
+        super(title);
         dbHelper = new DbHelper(panel1);
 
         initView();
     }
 
     private void initView() {
+        this.setContentPane(panel1);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocation(500, 240);
+        this.pack();
+
         btnSubmit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -48,6 +56,7 @@ public class Frame1 extends JFrame {
             }
         });
 
+        //打开数据库文件浏览器
         btnOpenDb.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

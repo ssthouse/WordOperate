@@ -10,11 +10,7 @@ import javax.swing.*;
 public class Main {
 
     public static void main(String[] args){
-        JFrame frame = new JFrame("Frame1");
-        frame.setContentPane(new Frame1().panel1);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocation(500, 200);
-        frame.pack();
+        JFrame frame = new Frame1("Frame1");
         frame.setVisible(true);
     }
 }

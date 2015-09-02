@@ -3,8 +3,10 @@ package com.ssthouse.model;
 import com.ssthouse.model.database.ProjectDbCons;
 import com.ssthouse.util.FileHelper;
 import com.ssthouse.util.Log;
+import com.ssthouse.view.DialogHelper;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +20,8 @@ import java.sql.*;
 public class DbHelper {
     private static String TAG = "DbHelper";
 
+    private static String targetFileName = "data.db";
+
     private Component parent;
 
     private File dbFile;
@@ -28,43 +32,79 @@ public class DbHelper {
     public DbHelper(Component parent) {
         this.parent = parent;
 
+        //构造方法中判断文件夹中有没有****有的话***就打开成数据库--File
+        initDbFile();
     }
 
     /**
      * 显示数据库选择Dialog
      */
     public void showDbChooseDialog() {
-        JFileChooser fileChooseDialog = new JFileChooser();
+        final JFileChooser fileChooseDialog = new JFileChooser(".");
         fileChooseDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooseDialog.addChoosableFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                String fileName = f.getName();
+                if (fileName.endsWith(".db")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return "请选择sqlite数据库文件";
+            }
+        });
+        fileChooseDialog.setAcceptAllFileFilterUsed(false);
         fileChooseDialog.showDialog(new JLabel(), "选择数据库文件");
         //窗口应该会停在这里等待文件被选中
-        File file = fileChooseDialog.getSelectedFile();
         dbFile = fileChooseDialog.getSelectedFile();
-        //将文件复制到项目目录
-        FileHelper.copy(dbFile, new File(System.getProperty("user.dir") + "\\" + dbFile.getName()));
-        System.out.println("文件:" + file.getAbsolutePath());
 
-        //TODO
+        //将文件复制到项目目录
+        FileHelper.copy(dbFile, new File(System.getProperty("user.dir") + "\\" + targetFileName));
+//        System.out.println("文件:" + file.getAbsolutePath());
+
         //尝试打开文件
         openDb();
 
-        //读取Marker和Project数据
+        //TODO--读取Marker和Project数据
         readMarker();
-        readProject();
+//        readProject();
     }
 
     public void openDb() {
+        Log.log("我在试图打开数据库");
         try {
             //连接SQLite的JDBC
             Class.forName("org.sqlite.JDBC");
             //建立一个数据库名test.db的连接，如果不存在就在当前目录下创建之
-            connection = DriverManager.getConnection("jdbc:sqlite:" + "test.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + targetFileName);
+            //测试数据库是否可用
+            Statement st = connection.createStatement();
+            st.executeQuery("SELECT * FROM "+ProjectDbCons.TABLE_PRJS);
         } catch (SQLException e) {
-            e.printStackTrace();
-            Log.log("打开数据库失败");
+//            e.printStackTrace();
+            DialogHelper.showDbWrongDialog(parent);
+            connection = null;
         } catch (ClassNotFoundException e) {
-            Log.log("没找到类");
-            e.printStackTrace();
+//            e.printStackTrace();
+            DialogHelper.showDriveErrorDialog(parent);
+            connection = null;
+        }
+    }
+
+    /**
+     * 初始化DbFile---如果已经有了的话
+     */
+    private void initDbFile() {
+        File file = new File(System.getProperty("user.dir") + "\\" + "data.db");
+        if (file.exists()) {
+            dbFile = file;
+        } else {
+            dbFile = null;
         }
     }
 
@@ -86,6 +126,9 @@ public class DbHelper {
         }
     }
 
+    /**
+     *读取Marker表
+     */
     private void readMarker() {
         try {
             Statement statement = connection.createStatement();
@@ -102,6 +145,9 @@ public class DbHelper {
         }
     }
 
+    /**
+     * 读取Project表
+     */
     private void readProject() {
         try {
             Statement statement = connection.createStatement();
