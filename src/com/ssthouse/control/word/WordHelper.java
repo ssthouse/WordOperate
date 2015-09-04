@@ -1,4 +1,4 @@
-package com.ssthouse.word;
+package com.ssthouse.control.word;
 
 import com.ssthouse.util.Log;
 import org.apache.poi.xwpf.usermodel.*;
@@ -83,11 +83,10 @@ public class WordHelper {
         List<XWPFRun> runs;
         Matcher matcher;
         if (this.matcher(para.getParagraphText()).find()) {
-//            Log.logError("我进来了..........");
             runs = para.getRuns();
             for (int i = 0; i < runs.size(); i++) {
                 XWPFRun run = runs.get(i);
-//                Log.logError(run.toString());
+                //Log.logError(run.toString());
                 String runText = run.toString();
                 matcher = this.matcher(runText);
                 if (matcher.find()) {
@@ -95,15 +94,13 @@ public class WordHelper {
                         runText = matcher.replaceFirst(String.valueOf(params
                                 .get(matcher.group(1))));
                     }
-//                    Log.logError("我替换了一个!!!");
+                    //Log.logError("我替换了一个!!!");
                     // 直接调用XWPFRun的setText()方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
                     // 所以我们不能直接设值，需要先删除当前run,然后再自己手动插入一个新的run。
                     para.removeRun(i);
                     para.insertNewRun(i).setText(runText);
                 }
             }
-        } else {
-            // Log.logError(para.getParagraphText() + "根本没找到!!!");
         }
     }
 

@@ -9,8 +9,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.nio.file.Files;
 import java.sql.*;
 
 /**
@@ -76,7 +74,6 @@ public class DbHelper {
     }
 
     public void openDb() {
-        Log.log("我在试图打开数据库");
         try {
             //连接SQLite的JDBC
             Class.forName("org.sqlite.JDBC");
@@ -84,13 +81,11 @@ public class DbHelper {
             connection = DriverManager.getConnection("jdbc:sqlite:" + targetFileName);
             //测试数据库是否可用
             Statement st = connection.createStatement();
-            st.executeQuery("SELECT * FROM "+ProjectDbCons.TABLE_PRJS);
+            st.executeQuery("SELECT * FROM " + ProjectDbCons.TABLE_PRJS);
         } catch (SQLException e) {
-//            e.printStackTrace();
             DialogHelper.showDbWrongDialog(parent);
             connection = null;
         } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
             DialogHelper.showDriveErrorDialog(parent);
             connection = null;
         }
@@ -127,7 +122,7 @@ public class DbHelper {
     }
 
     /**
-     *读取Marker表
+     * 读取Marker表
      */
     private void readMarker() {
         try {
@@ -159,5 +154,15 @@ public class DbHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    //**************getter********and*********setter***********
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 }

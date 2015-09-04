@@ -2,8 +2,8 @@ package com.ssthouse.view;
 
 import com.ssthouse.model.DbHelper;
 import com.ssthouse.util.Log;
-import com.ssthouse.word.WordHelper;
-import com.ssthouse.word.WordKey;
+import com.ssthouse.control.word.WordHelper;
+import com.ssthouse.control.word.WordKey;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,10 +47,14 @@ public class Frame1 extends JFrame {
         this.setLocation(500, 240);
         this.pack();
 
+        //替换word文件中的数据
         btnSubmit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                if(dbHelper.getConnection() == null){
+                    return;
+                }
                 Log.log(TAG, "生成word");
                 WordHelper.getInstance().generateWordFormTemplate(generateDataMap());
             }
