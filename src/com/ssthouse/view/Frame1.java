@@ -52,7 +52,7 @@ public class Frame1 extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(dbHelper.getConnection() == null){
+                if (dbHelper.getConnection() == null) {
                     return;
                 }
                 Log.log(TAG, "生成word");
@@ -78,4 +78,5 @@ public class Frame1 extends JFrame {
         dataMap.put(WordKey.ITEM3, tfItem3.getText());
         return dataMap;
     }
+
 }

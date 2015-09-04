@@ -1,8 +1,8 @@
 package com.ssthouse;
 
-import com.ssthouse.control.word.WordPicTest;
-import com.ssthouse.test.WordDemo;
-import com.ssthouse.view.Frame1;
+import com.ssthouse.test.FrameTest;
+import com.ssthouse.test.ListAndCombo;
+import com.ssthouse.test.ProgressBarTest;
 
 import javax.swing.*;
 
@@ -15,14 +15,27 @@ public class Main {
 //        JFrame frame = new Frame1("Frame1");
 //        frame.setVisible(true);
 
+//        FrameTest frameTest = new FrameTest("hahaha");
+//        frameTest.setVisible(true);
+
+//        ProgressBarTest progressBarTest = new ProgressBarTest("hahaha");
+//        progressBarTest.setVisible(true);
+
+        JFrame frame = new JFrame("ahhahah");
+        frame.setContentPane(new ListAndCombo("xii").mainPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocation(500, 300);
+        frame.pack();
+        frame.setVisible(true);
+
         //TODO--测试word添加图片
 //        WordPicTest.addPic();
 
         //TODO
-        try {
-            WordDemo.wordDemoTest();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            WordDemo.wordDemoTest();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

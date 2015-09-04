@@ -40,7 +40,7 @@ public class DbHelper {
     public void showDbChooseDialog() {
         final JFileChooser fileChooseDialog = new JFileChooser(".");
         fileChooseDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooseDialog.addChoosableFileFilter(new FileFilter() {
+        fileChooseDialog.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
                 String fileName = f.getName();
