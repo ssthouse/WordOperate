@@ -1,4 +1,4 @@
-package com.ssthouse.util;
+package com.ssthouse.control.util;
 
 import java.io.*;
 

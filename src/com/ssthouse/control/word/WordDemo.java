@@ -1,6 +1,5 @@
-package com.ssthouse.test;
+package com.ssthouse.control.word;
 
-import com.ssthouse.control.word.CustomXWPFDocument;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.impl.xb.xmlschema.SpaceAttribute;

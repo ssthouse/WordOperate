@@ -1,4 +1,4 @@
-package com.ssthouse.util;
+package com.ssthouse.control.util;
 
 public class Log {
     public static void logInfo(String msg) {
