@@ -38,9 +38,7 @@ public class TransferItem {
      * @return
      */
     public boolean isWordEnable() {
-        if (dbPath.isEmpty() || title.isEmpty()
-                || dateStr.isEmpty()
-                || wordOutputPath.isEmpty()) {
+        if (isStrEmpty(dbPath) || isStrEmpty(wordOutputPath)) {
             return false;
         } else {
             return true;
@@ -53,12 +51,23 @@ public class TransferItem {
      * @return
      */
     public boolean isExcelEnable() {
-        if (dbPath == null || dbPath.isEmpty()
-                || excelOutputPath == null
-                || excelOutputPath.isEmpty()) {
+        if (isStrEmpty(dbPath) || isStrEmpty(excelOutputPath)) {
             return false;
         } else {
             return true;
+        }
+    }
+
+    /**
+     * 判断字符串是否为空
+     * @param str
+     * @return
+     */
+    private boolean isStrEmpty(String str){
+        if(str == null || str.length() == 0){
+            return true;
+        }else{
+            return false;
         }
     }
 

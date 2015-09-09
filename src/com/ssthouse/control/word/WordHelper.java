@@ -1,12 +1,14 @@
 package com.ssthouse.control.word;
 
 import com.ssthouse.control.util.Log;
+import com.ssthouse.model.MarkerItem;
+import com.ssthouse.model.TransferItem;
 import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,14 +19,27 @@ import java.util.regex.Pattern;
 public class WordHelper {
     private static final String TAG = "WordHelper";
 
-    private static String PATH;
-
-    static {
-        PATH = System.getProperty("user.dir") + "\\data\\";
+    interface WordKey {
+        //${title} ${item1} ${item2} ${item3}${date}
+        public static String TITLE = "title";
+        public static String DATE = "date";
+        public static String ITEM1 = "item1";
+        public static String ITEM2 = "item2";
+        public static String ITEM3 = "item3";
     }
 
     private static WordHelper wordHelper;
 
+    /**
+     * 当前程序的工作路径
+     */
+    private String path;
+
+    /**
+     * 获取唯一的单例
+     *
+     * @return
+     */
     public static WordHelper getInstance() {
         if (wordHelper == null) {
             wordHelper = new WordHelper();
@@ -33,6 +48,7 @@ public class WordHelper {
     }
 
     private WordHelper() {
+        path = System.getProperty("user.dir") + "\\data\\";
     }
 
     /**
@@ -40,23 +56,79 @@ public class WordHelper {
      *
      * @throws Exception
      */
-    public void generateWordFormTemplate(Map<String, String> params) {
+    public void generateWord(TransferItem transferItem,
+                             List<MarkerItem> markerItemList) {
+        //获取需要替换的数据
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(WordKey.TITLE, transferItem.getTitle());
+        params.put(WordKey.DATE, transferItem.getDateStr());
         try {
-            String filePath = PATH + "template.docx";
+            //获取模板word文件
+            String filePath = path + "template.docx";
             InputStream is = new FileInputStream(filePath);
             XWPFDocument doc = new XWPFDocument(is);
+
             // 替换段落里面的变量
             this.replaceInPara(doc, params);
             // 替换表格里面的变量
             this.replaceInTable(doc, params);
-            OutputStream os = new FileOutputStream(PATH + "output.docx");
+
+            //生成表格数据
+            insertTable(doc, markerItemList);
+
+            //输出文件
+            OutputStream os = new FileOutputStream(transferItem.getWordOutputPath());
             doc.write(os);
-            this.close(os);
-            this.close(is);
+            //关闭流
+            os.close();
+            is.close();
         } catch (IOException e) {
             Log.log(TAG, "word文件生成失败");
         }
     }
+
+    private void insertTable(XWPFDocument doc, List<MarkerItem> markerItemList) {
+        List<String> columnList = new ArrayList<String>();
+        columnList.add("工程名");
+        columnList.add("经度");
+        columnList.add("纬度");
+        //插入表格
+        XWPFTable table = doc.createTable(markerItemList.size() + 1, 3);
+        setTableWidth(table, "8000");
+
+        //插入表头
+        XWPFTableRow rowHeader = table.getRow(0);
+        for (int i = 0; i < 3; i++) {
+            rowHeader.getCell(i).setText(columnList.get(i));
+        }
+
+        //插入其他数据
+        for (int i = 0; i < markerItemList.size(); i++) {
+            XWPFTableRow dataRow = table.getRow(i + 1);
+            dataRow.getCell(0).setText(markerItemList.get(i).getPrjName());
+            dataRow.getCell(1).setText(markerItemList.get(i).getLongtitude());
+            dataRow.getCell(2).setText(markerItemList.get(i).getLatitude());
+        }
+    }
+
+    /**
+     * 设置Table高度
+     *
+     * @param table
+     * @param width
+     */
+    public void setTableWidth(XWPFTable table, String width) {
+        CTTbl ttbl = table.getCTTbl();
+        CTTblPr tblPr = ttbl.getTblPr() == null ? ttbl.addNewTblPr() : ttbl
+                .getTblPr();
+        CTTblWidth tblWidth = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr
+                .addNewTblW();
+        CTJc cTJc = tblPr.addNewJc();
+        cTJc.setVal(STJc.Enum.forString("center"));
+        tblWidth.setW(new BigInteger(width));
+        tblWidth.setType(STTblWidth.DXA);
+    }
+
 
     /**
      * 替换段落里面的变量
@@ -142,35 +214,5 @@ public class WordHelper {
                 Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(str);
         return matcher;
-    }
-
-    /**
-     * 关闭输入流
-     *
-     * @param is
-     */
-    private void close(InputStream is) {
-        if (is != null) {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * 关闭输出流
-     *
-     * @param os
-     */
-    private void close(OutputStream os) {
-        if (os != null) {
-            try {
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

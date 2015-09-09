@@ -2,6 +2,7 @@ package com.ssthouse.app;
 
 import com.ssthouse.control.db.DbHelper;
 import com.ssthouse.control.excel.ExcelHelper;
+import com.ssthouse.control.word.WordHelper;
 import com.ssthouse.model.MarkerItem;
 import com.ssthouse.model.TransferItem;
 import com.ssthouse.control.util.FileChooserHelper;
@@ -16,6 +17,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -116,6 +119,15 @@ public class MainFrame extends JFrame {
                 File file = FileChooserHelper.getWordOutputFilePath(MainFrame.this);
                 transferItem.setWordOutputPath(file.getAbsolutePath() + ".docx");
                 tfWordOutput.setText(file.getName() + ".docx");
+                //更新word标题---日期
+                transferItem.setTitle(transferItem.getPrjName());
+                tfTitle.setText(transferItem.getPrjName());
+                //日期
+                Calendar cal = Calendar.getInstance();
+                String str = cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.MONTH)
+                        + ":" + cal.get(Calendar.DAY_OF_MONTH);
+                transferItem.setDateStr(str);
+                tfDate.setText(str);
             }
         });
 
@@ -136,8 +148,14 @@ public class MainFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 //判断条件是否符合
-                if (transferItem.isWordEnable()) {
-                    //TODO--生成word
+                if (!transferItem.isWordEnable()) {
+                    DialogHelper.showWordUnableDialog(MainFrame.this);
+                } else {
+                    //TODO---生成word文件
+                    WordHelper.getInstance().generateWord( transferItem,
+                            dbHelper.getMarkers(transferItem.getPrjName()));
+                    //弹出Dialog
+                    DialogHelper.showWordCompleteDialog(MainFrame.this);
                 }
             }
         });
@@ -148,10 +166,13 @@ public class MainFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 //判断条件是否符合
-                if (transferItem.isExcelEnable()) {
-                    //TODO--生成excel
+                if (!transferItem.isExcelEnable()) {
+                    DialogHelper.showExcelUnableDialog(MainFrame.this);
+                } else {
                     ExcelHelper.getInstance().generateExcel(transferItem.getExcelOutputPath(),
                             transferItem.getPrjName(), dbHelper.getMarkers(transferItem.getPrjName()));
+                    //弹出Dialog
+                    DialogHelper.showExcelCompleteDialog(MainFrame.this);
                 }
             }
         });

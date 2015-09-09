@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 网上一个生成化学题的案例
  * Created by ssthouse on 2015/9/2.
  */
 public class WordDemo {
