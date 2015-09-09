@@ -1,6 +1,7 @@
 package com.ssthouse.app;
 
 import com.ssthouse.control.db.DbHelper;
+import com.ssthouse.control.excel.ExcelHelper;
 import com.ssthouse.model.MarkerItem;
 import com.ssthouse.model.TransferItem;
 import com.ssthouse.control.util.FileChooserHelper;
@@ -149,6 +150,8 @@ public class MainFrame extends JFrame {
                 //判断条件是否符合
                 if (transferItem.isExcelEnable()) {
                     //TODO--生成excel
+                    ExcelHelper.getInstance().generateExcel(transferItem.getExcelOutputPath(),
+                            transferItem.getPrjName(), dbHelper.getMarkers(transferItem.getPrjName()));
                 }
             }
         });

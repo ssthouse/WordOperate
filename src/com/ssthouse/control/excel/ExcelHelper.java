@@ -1,6 +1,7 @@
 package com.ssthouse.control.excel;
 
 import com.ssthouse.control.util.Log;
+import com.ssthouse.model.MarkerItem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -8,6 +9,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * Excel文件工具类
@@ -18,38 +20,38 @@ public class ExcelHelper {
 
     private static ExcelHelper excelHelper;
 
-    private ExcelHelper(){}
+    private ExcelHelper() {
+    }
 
-    public static ExcelHelper getInstance(){
-        if(excelHelper == null){
+    public static ExcelHelper getInstance() {
+        if (excelHelper == null) {
             excelHelper = new ExcelHelper();
         }
         return excelHelper;
     }
 
-    public void generateFromTemplate(String path){
-
-    }
-
     /**
-     * 传入路径---不管文件存不存在--都可以写入数据
+     * 创建Excel文件
      *
      * @param path
      */
-    public void write(String path) {
+    public void generateExcel(String path, String prjName, List<MarkerItem> markerItemList) {
         //创建工作文档对象
-        Workbook wb;
-        wb = new XSSFWorkbook();
+        Workbook wb = new XSSFWorkbook();
         //创建sheet对象
-        Sheet sheet1 = wb.createSheet("sheet1");
+        Sheet sheet1 = wb.createSheet(prjName);
+        //创建Header
+        createHeader(sheet1);
         //循环写入行数据
-        for (int i = 0; i < 5; i++) {
-            Row row = sheet1.createRow(i);
+        for (int i = 0; i < markerItemList.size(); i++) {
+            Row row = sheet1.createRow(i+1);
             //循环写入列数据
-            for (int j = 0; j < 8; j++) {
-                Cell cell = row.createCell(j);
-                cell.setCellValue("测试" + j);
-            }
+            Cell cell0 = row.createCell(0);
+            Cell cell1 = row.createCell(1);
+            Cell cell2 = row.createCell(2);
+            cell0.setCellValue(markerItemList.get(i).getPrjName());
+            cell1.setCellValue(markerItemList.get(i).getLongtitude());
+            cell2.setCellValue(markerItemList.get(i).getLatitude());
         }
         try {
             //创建文件流
@@ -58,6 +60,7 @@ public class ExcelHelper {
             wb.write(stream);
             //关闭文件流
             stream.close();
+            Log.log(TAG, "Excel创建完毕");
         } catch (IOException e) {
             Log.log(TAG, "wrong!!!");
             e.printStackTrace();
@@ -65,7 +68,22 @@ public class ExcelHelper {
     }
 
     /**
+     * 创建表头
+     * @param sheet
+     */
+    private void createHeader(Sheet sheet){
+        Row row = sheet.createRow(0);
+        Cell cell0 = row.createCell(0);
+        Cell cell1 = row.createCell(1);
+        Cell cell2 = row.createCell(2);
+        cell0.setCellValue("工程名");
+        cell1.setCellValue("经度");
+        cell2.setCellValue("纬度");
+    }
+
+    /**
      * 读取指定路径的xlsx文件
+     *
      * @param path
      */
     public void read(String path) {

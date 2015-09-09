@@ -34,28 +34,30 @@ public class TransferItem {
 
     /**
      * word数据是否齐备
+     *
      * @return
      */
-    public boolean isWordEnable(){
-        if(dbPath.isEmpty() || title.isEmpty()
+    public boolean isWordEnable() {
+        if (dbPath.isEmpty() || title.isEmpty()
                 || dateStr.isEmpty()
-                || wordOutputPath.isEmpty()){
+                || wordOutputPath.isEmpty()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
     /**
      * Excel数据是否齐备
+     *
      * @return
      */
-    public boolean isExcelEnable(){
-        if(dbPath.isEmpty() || title.isEmpty()
-                || dateStr.isEmpty()
-                || wordOutputPath.isEmpty()){
+    public boolean isExcelEnable() {
+        if (dbPath == null || dbPath.isEmpty()
+                || excelOutputPath == null
+                || excelOutputPath.isEmpty()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
