@@ -18,7 +18,12 @@ import java.util.List;
 public class DbHelper {
     private static final String TAG = "DbHelper";
 
-    private static final String dbCopyName = "location.db";
+    private static final String dbCopyName = "temp.db";
+
+    /**
+     * 临时的.db文件
+     */
+    private File tempDbFile;
 
     //Marker表常量
     interface MarkerCons{
@@ -49,7 +54,8 @@ public class DbHelper {
         this.parent = parent;
         this.dbFile = dbFile;
         //将数据库复制到本地
-        FileHelper.copy(dbFile, new File(System.getProperty("user.dir")+"\\"+dbCopyName));
+        tempDbFile = new File(System.getProperty("user.dir")+"\\"+dbCopyName);
+        FileHelper.copy(dbFile, tempDbFile);
         //连接数据库
         openDb();
     }
@@ -134,6 +140,20 @@ public class DbHelper {
             e.printStackTrace();
         }
         return list;
+    }
+
+    /**
+     * 删除生成的临时文件
+     */
+    public void deleteTempDbFile(){
+        if(tempDbFile == null){
+            return;
+        }
+        if(tempDbFile.delete()){
+            Log.log(TAG, "删除成功");
+        }else{
+            Log.log(TAG, "删除失败");
+        }
     }
 
     //**************getter********and*********setter***********

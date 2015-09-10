@@ -3,6 +3,7 @@ package com.ssthouse.app;
 import com.ssthouse.control.db.DbHelper;
 import com.ssthouse.control.excel.ExcelHelper;
 import com.ssthouse.control.util.FileChooserHelper;
+import com.ssthouse.control.util.Log;
 import com.ssthouse.control.word.WordHelper;
 import com.ssthouse.model.MarkerItem;
 import com.ssthouse.model.TransferItem;
@@ -10,10 +11,7 @@ import com.ssthouse.model.TransferItem;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.Calendar;
 import java.util.List;
@@ -23,6 +21,8 @@ import java.util.List;
  * Created by ssthouse on 2015/9/8.
  */
 public class MainFrame extends JFrame {
+    private static final String TAG = "MainFrame";
+
     //UI控件
     private JTextField tfDatabse;
     private JButton btnGetDatabase;
@@ -122,7 +122,7 @@ public class MainFrame extends JFrame {
                 //日期
                 Calendar cal = Calendar.getInstance();
                 //注意： Calendar月份要加一
-                String str = cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.MONTH + 1)
+                String str = cal.get(Calendar.YEAR) + ":" + (cal.get(Calendar.MONTH)+1)
                         + ":" + cal.get(Calendar.DAY_OF_MONTH);
                 transferItem.setDateStr(str);
                 tfDate.setText(str);
@@ -172,6 +172,21 @@ public class MainFrame extends JFrame {
                     //弹出Dialog
                     DialogHelper.showExcelCompleteDialog(MainFrame.this);
                 }
+            }
+        });
+
+        //设置关闭时删除文件
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                if(dbHelper == null){
+                    return;
+                }
+                //删除生成的.db文件
+                dbHelper.deleteTempDbFile();
+                Log.log(TAG, "我删除了文件");
+                //DialogHelper.showErrorDialog(MainFrame.this, "我删除了文件");
             }
         });
     }
