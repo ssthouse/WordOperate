@@ -32,12 +32,8 @@ public class WordHelper {
         public static String ITEM3 = "item3";
     }
 
+    //单例
     private static WordHelper wordHelper;
-
-    /**
-     * 当前程序的工作路径
-     */
-    private String path;
 
     /**
      * 获取唯一的单例
@@ -51,9 +47,7 @@ public class WordHelper {
         return wordHelper;
     }
 
-    private WordHelper() {
-        path = System.getProperty("user.dir") + "\\data\\";
-    }
+    private WordHelper() {}
 
     /**
      * 用一个docx文档作为模板，然后替换其中的内容，再写入目标文档中。
