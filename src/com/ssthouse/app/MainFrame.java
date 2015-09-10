@@ -124,7 +124,8 @@ public class MainFrame extends JFrame {
                 tfTitle.setText(transferItem.getPrjName());
                 //日期
                 Calendar cal = Calendar.getInstance();
-                String str = cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.MONTH)
+                //注意： Calendar月份要加一
+                String str = cal.get(Calendar.YEAR) + ":" + cal.get(Calendar.MONTH + 1)
                         + ":" + cal.get(Calendar.DAY_OF_MONTH);
                 transferItem.setDateStr(str);
                 tfDate.setText(str);
@@ -152,7 +153,7 @@ public class MainFrame extends JFrame {
                     DialogHelper.showWordUnableDialog(MainFrame.this);
                 } else {
                     //TODO---生成word文件
-                    WordHelper.getInstance().generateWord( transferItem,
+                    WordHelper.getInstance().generateWord(MainFrame.this, transferItem,
                             dbHelper.getMarkers(transferItem.getPrjName()));
                     //弹出Dialog
                     DialogHelper.showWordCompleteDialog(MainFrame.this);

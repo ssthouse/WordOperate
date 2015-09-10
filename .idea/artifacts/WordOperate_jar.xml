@@ -11,6 +11,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/poi-scratchpad-3.8-beta4-20110826.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/sqlitejdbc-v033-nested.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/libs/poi-ooxml-3.8-20120326.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/template.docx" />
     </root>
   </artifact>
 </component>

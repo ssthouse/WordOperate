@@ -19,6 +19,16 @@ public class DialogHelper {
     }
 
     /**
+     * Error的Dialog
+     * @param parent
+     * @param msg
+     */
+    public static void showErrorDialog(Component parent, String msg){
+        JOptionPane.showMessageDialog(parent, msg);
+    }
+
+
+    /**
      * 数据库没打开Dialog
      * @param parent
      */

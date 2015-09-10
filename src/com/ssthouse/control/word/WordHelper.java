@@ -1,14 +1,18 @@
 package com.ssthouse.control.word;
 
+import com.ssthouse.app.DialogHelper;
 import com.ssthouse.control.util.Log;
 import com.ssthouse.model.MarkerItem;
 import com.ssthouse.model.TransferItem;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
+import java.awt.*;
 import java.io.*;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,16 +60,18 @@ public class WordHelper {
      *
      * @throws Exception
      */
-    public void generateWord(TransferItem transferItem,
+    public void generateWord(Component parent, TransferItem transferItem,
                              List<MarkerItem> markerItemList) {
         //获取需要替换的数据
         Map<String, String> params = new HashMap<String, String>();
         params.put(WordKey.TITLE, transferItem.getTitle());
         params.put(WordKey.DATE, transferItem.getDateStr());
         try {
-            //获取模板word文件
-            String filePath = path + "template.docx";
-            InputStream is = new FileInputStream(filePath);
+            //获取template文件输入流
+            InputStream is = this.getClass().getResourceAsStream("/template.docx");
+            //DialogHelper.showErrorDialog(parent, "我运行到了这里"+(is==null));
+
+            //根据输入流获取doc文件
             XWPFDocument doc = new XWPFDocument(is);
 
             // 替换段落里面的变量
@@ -84,6 +90,7 @@ public class WordHelper {
             is.close();
         } catch (IOException e) {
             Log.log(TAG, "word文件生成失败");
+            DialogHelper.showErrorDialog(parent, "生成文件出错！");
         }
     }
 
